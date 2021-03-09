@@ -4,7 +4,7 @@ import './owner/Operator.sol';
 import './lib/BEP20Burnable.sol';
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-contract Token is BEP20Burnable, Ownable, Operator {
+contract Token is BEP20Burnable, Operator {
 
     uint256 private _cap = 120000000e18; // 120.000.000;
 
@@ -51,7 +51,7 @@ contract Token is BEP20Burnable, Ownable, Operator {
         return _cap;
     }
 
-    function releaseTeamAllocation(address _receiver) public onlyOwner {
+    function releaseTeamAllocation(address _receiver) public onlyOperator {
         require(teamReleased.add(amountEachTeamRelease) <= teamAllocation, 'Max team allocation released');
         require(now - lastTeamReleased >= 30 days, 'Please wait to next checkpoint');
         _mint(_receiver,amountEachTeamRelease);
@@ -59,7 +59,7 @@ contract Token is BEP20Burnable, Ownable, Operator {
         lastTeamReleased = lastTeamReleased + 30 days;
     }
 
-    function releaseAdviserAllocation(address _receiver) public onlyOwner {
+    function releaseAdviserAllocation(address _receiver) public onlyOperator {
         require(adviserReleased.add(amountEachAdviserRelease) <= adviserAllocation, 'Max adviser allocation released');
         require(now - lastAdviserReleased >= 30 days, 'Please wait to next checkpoint');
         _mint(_receiver,amountEachAdviserRelease);
@@ -67,7 +67,7 @@ contract Token is BEP20Burnable, Ownable, Operator {
         lastAdviserReleased = lastAdviserReleased + 30 days;
     }
 
-    function releaseMarketingAllocation(address _receiver) public onlyOwner {
+    function releaseMarketingAllocation(address _receiver) public onlyOperator {
         require(marketingReleased.add(amountEachMarketingRelease) <= marketingAllocation, 'Max marketing allocation released');
         require(now - lastMarketingReleased >= 90 days, 'Please wait to next checkpoint');
         _mint(_receiver,amountEachMarketingRelease);
@@ -75,7 +75,7 @@ contract Token is BEP20Burnable, Ownable, Operator {
         lastMarketingReleased = lastMarketingReleased + 90 days;
     }
 
-    function releasePrivateSaleAllocation(address _receiver) public onlyOwner {
+    function releasePrivateSaleAllocation(address _receiver) public onlyOperator {
         require(privateSaleReleased.add(amountEachPrivateSaleRelease) <= privateSaleAllocation, 'Max privateSale allocation released');
         require(now - lastPrivateSaleReleased >= 90 days, 'Please wait to next checkpoint');
         _mint(_receiver,amountEachPrivateSaleRelease);
@@ -83,7 +83,7 @@ contract Token is BEP20Burnable, Ownable, Operator {
         lastPrivateSaleReleased = lastPrivateSaleReleased + 90 days;
     }
 
-    function releaseFarmAllocation(address _farmAddress, uint256 _amount) public onlyOwner {
+    function releaseFarmAllocation(address _farmAddress, uint256 _amount) public onlyOperator {
         require(farmingReleased.add(_amount) <= farmingAllocation, 'Max farming allocation released');
         _mint(_farmAddress,_amount);
         farmingReleased = farmingReleased.add(_amount);
@@ -98,7 +98,7 @@ contract Token is BEP20Burnable, Ownable, Operator {
 
     function mint(address recipient_, uint256 amount_)
     public
-    onlyOwner
+    onlyOperator
     returns (bool)
     {
         uint256 balanceBefore = balanceOf(recipient_);
@@ -108,14 +108,14 @@ contract Token is BEP20Burnable, Ownable, Operator {
         return balanceAfter > balanceBefore;
     }
 
-    function burn(uint256 amount) public override onlyOwner {
+    function burn(uint256 amount) public override onlyOperator {
         super.burn(amount);
     }
 
     function burnFrom(address account, uint256 amount)
     public
     override
-    onlyOwner
+    onlyOperator
     {
         super.burnFrom(account, amount);
     }

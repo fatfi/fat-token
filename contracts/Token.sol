@@ -23,10 +23,10 @@ contract Token is BEP20Burnable, Operator {
     uint256 private publicSaleReleased = 0;
 
 
-    uint private lastTeamReleased = now + 150 days; // 6 months after TGE
-    uint private lastAdviserReleased = now + 150 days; // 6 months after TGE
-    uint private lastMarketingReleased = now + 60 days; // unlock 25% every 3 months
-    uint private lastPrivateSaleReleased = now + 60 days; // unlock 25% every 3 months
+    uint private lastTeamReleased = now + 180 days; // 6 months after TGE
+    uint private lastAdviserReleased = now + 180 days; // 6 months after TGE
+    uint private lastMarketingReleased = now + 90 days; // unlock 25% every 3 months
+    uint private lastPrivateSaleReleased = now + 90 days; // unlock 25% every 3 months
 
 
     uint256 private amountEachTeamRelease = teamAllocation.mul(5).div(100);
@@ -40,7 +40,7 @@ contract Token is BEP20Burnable, Operator {
     constructor(
         address _publicSaleTGEAddress,
         address _privateSaleTGEAddress
-    ) public BEP20('FAT', 'FAT', 18) {
+    ) public BEP20('Fatfi Protocol', 'FAT', 18) {
         _mint(_privateSaleTGEAddress,amountEachPrivateSaleRelease);
         privateSaleReleased = privateSaleReleased.add(amountEachPrivateSaleRelease);
         _mint(_publicSaleTGEAddress,publicSaleAllocation);
@@ -53,7 +53,7 @@ contract Token is BEP20Burnable, Operator {
 
     function releaseTeamAllocation(address _receiver) public onlyOperator {
         require(teamReleased.add(amountEachTeamRelease) <= teamAllocation, 'Max team allocation released');
-        require(now - lastTeamReleased >= 30 days, 'Please wait to next checkpoint');
+        require(now - lastTeamReleased >= 1 days, 'Please wait to next checkpoint');
         _mint(_receiver,amountEachTeamRelease);
         teamReleased = teamReleased.add(amountEachTeamRelease);
         lastTeamReleased = lastTeamReleased + 30 days;
@@ -61,7 +61,7 @@ contract Token is BEP20Burnable, Operator {
 
     function releaseAdviserAllocation(address _receiver) public onlyOperator {
         require(adviserReleased.add(amountEachAdviserRelease) <= adviserAllocation, 'Max adviser allocation released');
-        require(now - lastAdviserReleased >= 30 days, 'Please wait to next checkpoint');
+        require(now - lastAdviserReleased >= 1 days, 'Please wait to next checkpoint');
         _mint(_receiver,amountEachAdviserRelease);
         adviserReleased = adviserReleased.add(amountEachAdviserRelease);
         lastAdviserReleased = lastAdviserReleased + 30 days;
@@ -69,7 +69,7 @@ contract Token is BEP20Burnable, Operator {
 
     function releaseMarketingAllocation(address _receiver) public onlyOperator {
         require(marketingReleased.add(amountEachMarketingRelease) <= marketingAllocation, 'Max marketing allocation released');
-        require(now - lastMarketingReleased >= 90 days, 'Please wait to next checkpoint');
+        require(now - lastMarketingReleased >= 1 days, 'Please wait to next checkpoint');
         _mint(_receiver,amountEachMarketingRelease);
         marketingReleased = marketingReleased.add(amountEachMarketingRelease);
         lastMarketingReleased = lastMarketingReleased + 90 days;
@@ -77,7 +77,7 @@ contract Token is BEP20Burnable, Operator {
 
     function releasePrivateSaleAllocation(address _receiver) public onlyOperator {
         require(privateSaleReleased.add(amountEachPrivateSaleRelease) <= privateSaleAllocation, 'Max privateSale allocation released');
-        require(now - lastPrivateSaleReleased >= 90 days, 'Please wait to next checkpoint');
+        require(now - lastPrivateSaleReleased >= 1 days, 'Please wait to next checkpoint');
         _mint(_receiver,amountEachPrivateSaleRelease);
         privateSaleReleased = privateSaleReleased.add(amountEachPrivateSaleRelease);
         lastPrivateSaleReleased = lastPrivateSaleReleased + 90 days;
